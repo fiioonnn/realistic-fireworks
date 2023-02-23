@@ -15,7 +15,7 @@ class Firework {
 		this.x = props.x || this.canvas.width / 2 - this.size;
 		this.y = props.y || this.canvas.height - this.size;
 		// Characteristics
-		this.particles = props.particles || Utils.randomInt(1, 400);
+		this.particles = props.particles || Utils.randomInt(1, 300);
 		this.force = props.force || 10;
 		this.explosionPower = props.explosionPower || Utils.randomInt(3, 45); // das als geschwindigkeit der partikel nehmen
 		// Velocity

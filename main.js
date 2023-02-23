@@ -121,7 +121,9 @@ function loop() {
 		objects = [];
 	}
 
-	requestAnimationFrame(loop);
+	setTimeout(() => {
+		loop();
+	}, 1000 / 60);
 }
 
 loop();
