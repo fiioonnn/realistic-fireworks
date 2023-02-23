@@ -31,11 +31,12 @@ class Firework {
 	}
 
 	explosion() {
+		let oldShineColor = this.shineColor;
+		this.shineColor = "255,255,255";
+		this.size = this.explosionPower / 2;
+		this.shineColor = oldShineColor;
 		this.isExploding = true;
 		this.color = "255,255,255";
-		this.shineColor = "255,255,255";
-
-		this.size = this.explosionPower / 2;
 
 		setTimeout(() => {
 			this.size = 0;
