@@ -71,7 +71,7 @@ function launchSound() {
 // }, 5000);
 //
 //! ---------------------------------------->>
-startRandomFirework();
+// startRandomFirework();
 function startRandomFirework() {
 	objects.push(
 		new Firework({
