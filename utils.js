@@ -5,7 +5,7 @@ export function checkDeath(object, canvas) {
 		object.y < 0 ||
 		object.y > canvas.height ||
 		object?.opacity <= 0 ||
-		object?.size <= 0.8
+		object?.size <= 0.5
 	) {
 		return true;
 	}

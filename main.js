@@ -27,6 +27,7 @@ let colors = [
 
 document.onkeydown = (e) => {
 	if (e.key === " ") {
+		launchSound();
 		objects.push(
 			new Firework({
 				canvas,
@@ -34,12 +35,42 @@ document.onkeydown = (e) => {
 				x: Utils.randomInt(canvas.width / 2 - 100, canvas.width / 2 + 100),
 				size: 3,
 				color: "255,255,255",
-				shineColor: colors[Utils.randomInt(0, colors.length - 1)],
+				shineColor: "255,255,255",
 			})
 		);
 	}
 };
 
+let lastHighestObjectCount = 0;
+
+function launchSound() {
+	let sound = new Audio("sounds/launch.mp3");
+	sound.volume = Utils.randomFloat(0.05, 0.2);
+	sound.play();
+	setTimeout(() => {
+		sound = null;
+	}, 10);
+}
+//! ---------------------------------------->>
+// setInterval(() => {
+// 	for (let index = 0; index < Utils.randomFloat(0, 6); index++) {
+// 		objects.push(
+// 			new Firework({
+// 				canvas,
+// 				ctx,
+// 				color: "255,255,255",
+
+// 				power: 70,
+// 				x: Utils.randomInt(canvas.width / 2 - 100, canvas.width / 2 + 100),
+// 				size: 3,
+// 				shineColor: "255,255,255",
+// 			})
+// 		);
+// 		launchSound();
+// 	}
+// }, 5000);
+//
+//! ---------------------------------------->>
 startRandomFirework();
 function startRandomFirework() {
 	objects.push(
@@ -53,11 +84,14 @@ function startRandomFirework() {
 			shineColor: colors[Utils.randomInt(0, colors.length - 1)],
 		})
 	);
+	launchSound();
 
 	setTimeout(() => {
 		startRandomFirework();
-	}, Utils.randomInt(10, 6000));
+	}, Utils.randomInt(400, 2000));
 }
+
+//! ---------------------------------------->>
 
 function loop() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -78,7 +112,7 @@ function loop() {
 					y: object.y,
 					color: object.color,
 					shineColor: object.shineColor,
-					multiplier: Utils.randomFloat(0.05, 20),
+					multiplier: Utils.randomFloat(0.3, 20),
 				})
 			);
 		}
@@ -105,9 +139,10 @@ function loop() {
 								ctx,
 								x: object.x,
 								y: object.y,
-								shineColor: "255,25,25",
+								text: object.text,
 								shineColor: object.shineColor,
-								explosionPower: object.explosionPower,
+								spreadPower: object.power,
+								spreadPowerRatio: object.powerRatio,
 							})
 						);
 					}
@@ -121,75 +156,23 @@ function loop() {
 		objects = [];
 	}
 
+	// ! DEBUG
+
+	if (objects.length > lastHighestObjectCount) {
+		lastHighestObjectCount = objects.length;
+	}
+	// // draw text with object count
+	// ctx.fillStyle = "#ffffff";
+	// ctx.shadowBlur = 0;
+	// ctx.font = "60px Arial";
+	// ctx.fillText(objects.length, 30, 60);
+	// // draw text with highest object count
+	// ctx.font = "30px Arial";
+	// ctx.fillText("LHOC: " + lastHighestObjectCount, 30, 100);
+
 	setTimeout(() => {
 		loop();
-	}, 1000 / 60);
+	}, 1000 / 120);
 }
 
 loop();
-
-// const canvas = document.createElement("canvas");
-// const ctx = canvas.getContext("2d");
-
-// const Core = function () {
-// 	this.config = {
-// 		debug: true,
-// 		background: "transparent",
-// 		prefix: "[cENV]",
-// 	};
-
-// 	this.init = function () {
-// 		this.canvas = null;
-// 		this.ctx = null;
-
-// 		this.setStatus(0);
-// 		this.debug();
-// 		this.buildCanvas();
-// 		this.clearCanvas();
-// 	};
-
-// 	this.debug = function () {
-// 		if (!this.config.debug) return;
-// 		this.config.background = "red";
-// 	};
-
-// 	this.buildCanvas = function () {
-// 		this.canvas = document.createElement("canvas");
-// 		this.ctx = canvas.getContext("2d");
-// 		// Append to body
-// 		document.body.appendChild(canvas);
-// 		// Configure canvas
-// 		canvas.width = document.body.clientWidth;
-// 		canvas.height = document.body.clientHeight;
-// 		canvas.style.display = "block";
-// 		this.setStatus(1);
-// 	};
-
-// 	this.clearCanvas = function () {
-// 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-// 		this.ctx.fillStyle = this.config.background;
-// 		this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-// 		this.setStatus(2);
-// 	};
-
-// 	this.setStatus = function (id) {
-// 		let statusList = {
-// 			0: "Debug mode: ON",
-// 			1: "Canvas build!",
-// 			2: "Canvas cleared.",
-// 			3: "Loop started!",
-// 			4: "Callback ´create´ executed!",
-// 			5: "Callback `update` started!",
-// 		};
-
-// 		if (!this.config.debug) return;
-
-// 		console.log(
-// 			"%c" + this.config.prefix + " " + Object.values(statusList)[id],
-// 			"color: #4287f5;"
-// 		);
-// 	};
-// };
-
-// const core = new Core();
-// core.init();

@@ -1,3 +1,6 @@
+//! TODO » More sounds
+//! TODO » Randomize sounds
+
 import * as Utils from "./utils.js";
 
 class Firework {
@@ -14,10 +17,18 @@ class Firework {
 		// Position
 		this.x = props.x || this.canvas.width / 2 - this.size;
 		this.y = props.y || this.canvas.height - this.size;
+		// Power
+		this.minPower = props.minPower || 3;
+		this.maxPower = props.maxPower || 70;
+		this.power = props.power || Utils.randomInt(this.minPower, this.maxPower);
+		this.powerRatio = Math.floor((this.power * 100) / this.maxPower) / 100;
+		// Sound
+		this.soundVolume = props.soundVolume || 0.5;
+		this.soundVolume = this.powerRatio;
 		// Characteristics
-		this.particles = props.particles || Utils.randomInt(1, 300);
-		this.force = props.force || 10;
-		this.explosionPower = props.explosionPower || Utils.randomInt(3, 45); // das als geschwindigkeit der partikel nehmen
+		this.particles = props.particles || Utils.randomInt(10, 100);
+		this.force = props.force || 8.5;
+		this.text = props.text || "";
 		// Velocity
 		this.vx = 0;
 		this.vy = -(Math.random() * 3) - this.force;
@@ -25,15 +36,22 @@ class Firework {
 		this.exploded = false;
 		this.isExploding = false;
 		this.trails = [];
+		this.soundPlayed = false;
 		// Environment
 		this.gravity = 0.1;
 		this.wind = Utils.randomFloat(0.1, 0.5);
+		// Sounds
+		this.sounds = {
+			"explosion-1": "sounds/explosion-1.mp3",
+			"explosion-2": "sounds/explosion-2.mp3",
+		};
+		console.log(this.power, this.powerRatio);
 	}
 
 	explosion() {
 		let oldShineColor = this.shineColor;
 		this.shineColor = "255,255,255";
-		this.size = this.explosionPower / 2;
+		this.size = this.power / 2.5;
 		this.shineColor = oldShineColor;
 		this.isExploding = true;
 		this.color = "255,255,255";
@@ -41,6 +59,10 @@ class Firework {
 		setTimeout(() => {
 			this.size = 0;
 		}, 10);
+		//! put this in extra function
+		if (this.soundPlayed) return;
+		this.soundPlayed = true;
+		this.playSound("explosion-1");
 	}
 
 	update(callback) {
@@ -70,6 +92,15 @@ class Firework {
 			this.ctx.shadowBlur = this.shineBlur;
 		}
 		this.ctx.fill();
+	}
+
+	playSound(soundName) {
+		let sound = new Audio(this.sounds[soundName]);
+		sound.volume = this.soundVolume;
+		sound.play();
+		setTimeout(() => {
+			sound = null;
+		}, 10);
 	}
 }
 
