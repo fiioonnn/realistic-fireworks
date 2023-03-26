@@ -9,7 +9,7 @@ class Firework {
 		this.canvas = props.canvas;
 		this.ctx = props.ctx;
 		// Style
-		this.color = props.color || "0,0,0";
+		this.color = props.color || "255,255,255";
 		this.size = props.size || 3;
 		this.opacity = props.opacity || 1;
 		this.shineBlur = props.shineBlur || 50;
@@ -18,8 +18,8 @@ class Firework {
 		this.x = props.x || this.canvas.width / 2 - this.size;
 		this.y = props.y || this.canvas.height - this.size;
 		// Power
-		this.minPower = props.minPower || 3;
-		this.maxPower = props.maxPower || 70;
+		this.minPower = props.minPower || 5;
+		this.maxPower = props.maxPower || 80;
 		this.power = props.power || Utils.randomInt(this.minPower, this.maxPower);
 		this.powerRatio = Math.floor((this.power * 100) / this.maxPower) / 100;
 		// Sound
@@ -44,24 +44,21 @@ class Firework {
 		this.sounds = {
 			"explosion-1": "sounds/explosion-1.mp3",
 			"explosion-2": "sounds/explosion-2.mp3",
+			"explosion-3": "sounds/explosion-3.mp3",
 		};
 		console.log(this.power, this.powerRatio);
 	}
 
 	explosion() {
-		let oldShineColor = this.shineColor;
-		this.shineColor = "255,255,255";
-		this.size = this.power / 2.5;
-		this.shineColor = oldShineColor;
+		this.size = this.power / 4;
 		this.isExploding = true;
-		this.color = "255,255,255";
-
 		setTimeout(() => {
 			this.size = 0;
 		}, 10);
 		//! put this in extra function
 		if (this.soundPlayed) return;
 		this.soundPlayed = true;
+		this.soundVolume = this.powerRatio;
 		this.playSound("explosion-1");
 	}
 
@@ -89,9 +86,10 @@ class Firework {
 		this.ctx.fillStyle = "rgba(" + this.color + ", " + this.opacity + ")";
 		if (this.shineBlur > 0) {
 			this.ctx.shadowColor = "rgb(" + this.shineColor + ")";
-			this.ctx.shadowBlur = this.shineBlur;
+			this.ctx.shadowBlur = 0;
 		}
 		this.ctx.fill();
+		this.ctx.closePath();
 	}
 
 	playSound(soundName) {

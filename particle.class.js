@@ -7,7 +7,7 @@ class Particle {
 		this.ctx = props.ctx;
 		// Style
 		this.color = props.color || "255,255,255";
-		this.size = props.size || Utils.randomInt(1, 3);
+		this.size = props.size || Utils.randomInt(1, 4);
 		this.opacity = props.opacity || 1;
 		this.shineBlur = props.shine || 3;
 		this.shineColor = props.shineColor || "255,0,0";
@@ -22,17 +22,17 @@ class Particle {
 		// Velocity
 		this.vx =
 			((Math.random() - 0.5) * Utils.randomInt(1, this.spreadPower)) /
-			Utils.randomInt(6, 10);
+			Utils.randomInt(4, 15);
 		// (((Math.random() - 0.5) * this.spreadPower) / 1.2) *
 		// Utils.randomInt(1, this.spreadPower);
 		this.vy =
 			((Math.random() - 0.5) * Utils.randomInt(1, this.spreadPower)) /
-			Utils.randomInt(6, 10);
+			Utils.randomInt(4, 15);
 		// (((Math.random() - 0.5) * this.spreadPower) / 1.2) *
 		// Utils.randomInt(1, this.spreadPower);
 		// States
 		// Environment
-		this.gravity = Utils.randomFloat(0.008, 0.03);
+		this.gravity = Utils.randomFloat(0.01, 0.03);
 		this.windStrength = 0.2;
 		this.blink = Utils.randomInt(0, 3) > 1 ? Math.random() * 2 : 0;
 	}
@@ -49,7 +49,7 @@ class Particle {
 		// this.opacity -= Utils.randomFloat(0.01, 0.02);
 		// this.size -= Utils.randomInt(0.02, 0.1);
 		// this.gravity += 0.0001;
-		this.size -= Utils.randomInt(0.02, 0.06);
+		this.size -= Utils.randomInt(0.04, 0.06);
 		if (Utils.randomInt(0, 2) > 1) {
 		}
 		if (this.size < 0) this.size = 0;
@@ -66,6 +66,7 @@ class Particle {
 			this.ctx.shadowBlur = this.shineBlur;
 		}
 		this.ctx.fill();
+		this.ctx.closePath();
 
 		//draw text "fionn"
 		if (this.text !== "") {

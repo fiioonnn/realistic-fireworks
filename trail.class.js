@@ -7,7 +7,7 @@ class Trail {
 		this.ctx = props.ctx;
 		// Style
 		this.color = props.color || "222,123,18";
-		this.size = props.size || 3;
+		this.size = props.size || Utils.randomInt(1, 4);
 		this.opacity = props.opacity || Math.random() * 3;
 		this.shineBlur = props.shine || 5;
 		this.shineColor = props.shineColor || "222,123,18";
@@ -22,7 +22,7 @@ class Trail {
 		// States
 		// Environment
 		this.gravity = props.multiplier * 0.01 || 0.01;
-		this.windStrength = 0.3;
+		this.windStrength = Utils.randomFloat(0.01, 0.2);
 	}
 
 	update() {
@@ -36,7 +36,7 @@ class Trail {
 
 		this.opacity -= 0.02 * this.multiplier;
 		this.size -= 0.4 * this.multiplier;
-		this.windStrength *= this.windStrength + 0.5;
+		// this.windStrength *= this.windStrength + 0.5;
 
 		if (this.size < 0) this.size = 0;
 

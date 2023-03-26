@@ -15,33 +15,63 @@ canvas.style.display = "block";
 
 let objects = [];
 
-let colors = [
-	"255,255,255",
-	"255,255,0",
-	"255,0,255",
-	"0,255,255",
-	"255,0,0",
-	"0,255,0",
-	"0,0,255",
-];
+let colors = ["255,255,255", "222, 93, 38", "0, 255, 0", "255, 0, 0"];
 
+function addFirework(options) {
+	objects.push(
+		new Firework({
+			canvas,
+			ctx,
+			x: canvas.width / 2,
+			...options,
+		})
+	);
+	launchSound();
+}
+
+let power = 0;
+let color = "0,0,0";
+//colors[Utils.randomInt(0, colors.length - 1)]
 document.onkeydown = (e) => {
-	if (e.key === " ") {
-		launchSound();
-		objects.push(
-			new Firework({
-				canvas,
-				ctx,
-				x: Utils.randomInt(canvas.width / 2 - 100, canvas.width / 2 + 100),
-				size: 3,
-				color: "255,255,255",
-				shineColor: "255,255,255",
-			})
-		);
+	if (e.key === "1") {
+		power = 5;
+		color = "255,0,0";
 	}
-};
+	if (e.key === "2") {
+		power = 30;
+		color = "255,0,0";
+	}
+	if (e.key === "3") {
+		power = 80;
+		color = "255,255,255";
+	}
+	if (e.key === "4") {
+		power = 80;
+		color = "0,255,0";
+	}
+	if (e.key === "5") {
+		power = 80;
+		color = "0,0,255";
+	}
+	if (e.key === "6") {
+		power = 80;
+		color = "255,0,0";
+	}
+	if (e.key === "7") {
+		power = 15;
+		color = "255,0,255";
+	}
+	if (e.key === "8") {
+		power = 80;
+		color = "255,0,255";
+	}
 
-let lastHighestObjectCount = 0;
+	addFirework({
+		power: power,
+		shineColor: color,
+		gravity: 0.001,
+	});
+};
 
 function launchSound() {
 	let sound = new Audio("sounds/launch.mp3");
@@ -51,48 +81,44 @@ function launchSound() {
 		sound = null;
 	}, 10);
 }
-//! ---------------------------------------->>
-// setInterval(() => {
-// 	for (let index = 0; index < Utils.randomFloat(0, 6); index++) {
-// 		objects.push(
-// 			new Firework({
-// 				canvas,
-// 				ctx,
-// 				color: "255,255,255",
 
-// 				power: 70,
-// 				x: Utils.randomInt(canvas.width / 2 - 100, canvas.width / 2 + 100),
-// 				size: 3,
-// 				shineColor: "255,255,255",
-// 			})
-// 		);
-// 		launchSound();
-// 	}
-// }, 5000);
-//
-//! ---------------------------------------->>
 // startRandomFirework();
 function startRandomFirework() {
 	objects.push(
 		new Firework({
 			canvas,
 			ctx,
-			x: Utils.randomInt(canvas.width / 2 - 100, canvas.width / 2 + 100),
+			x: canvas.width / 2,
 			size: 3,
 			color: "255,255,255",
-
+			gravity: 1,
 			shineColor: colors[Utils.randomInt(0, colors.length - 1)],
 		})
 	);
 	launchSound();
 
+	for (let i = 0; i < Utils.randomInt(-10, 6); i++) {
+		objects.push(
+			new Firework({
+				canvas,
+				ctx,
+				x: canvas.width / 2,
+				size: 3,
+				color: "255,255,255",
+				gravity: 1,
+				shineColor: colors[Utils.randomInt(0, colors.length - 1)],
+			})
+		);
+		launchSound();
+	}
+
 	setTimeout(() => {
 		startRandomFirework();
-	}, Utils.randomInt(400, 2000));
+	}, Utils.randomInt(200, 6000));
 }
 
 //! ---------------------------------------->>
-
+console.log(Utils.randomFloat(0.02, 4));
 function loop() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.fillStyle = "#000000";
@@ -112,7 +138,7 @@ function loop() {
 					y: object.y,
 					color: object.color,
 					shineColor: object.shineColor,
-					multiplier: Utils.randomFloat(0.3, 20),
+					multiplier: Utils.randomFloat(0.1, 4),
 				})
 			);
 		}
@@ -157,10 +183,6 @@ function loop() {
 	}
 
 	// ! DEBUG
-
-	if (objects.length > lastHighestObjectCount) {
-		lastHighestObjectCount = objects.length;
-	}
 	// // draw text with object count
 	// ctx.fillStyle = "#ffffff";
 	// ctx.shadowBlur = 0;
@@ -169,10 +191,10 @@ function loop() {
 	// // draw text with highest object count
 	// ctx.font = "30px Arial";
 	// ctx.fillText("LHOC: " + lastHighestObjectCount, 30, 100);
-
-	setTimeout(() => {
-		loop();
-	}, 1000 / 120);
+	requestAnimationFrame(loop);
+	// setTimeout(() => {
+	// 	loop();
+	// }, 1000 / 120);
 }
 
 loop();
